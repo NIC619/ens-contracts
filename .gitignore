@@ -1,0 +1,8 @@
+artifacts
+
+playground
+deployments/hardhat
+node_modules
+cache
+
+.env
