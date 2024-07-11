@@ -10,7 +10,7 @@ const accounts = {
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 const ALCHEMY_TOKEN = process.env.ALCHEMY_TOKEN || ""
 
-const gatewayServerURL = process.env.GATEWAY_SERVER_URL || "http://127.0.0.1:9545"
+const gatewayServerURL = process.env.GATEWAY_SERVER_URL || "http://localhost:8080"
 const gatewayURL = `${gatewayServerURL}/{sender}/{data}.json` || ""
 
 module.exports = {
@@ -19,7 +19,7 @@ module.exports = {
         hardhat: {
             chainId: 1,
             forking: {
-                url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
+                url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_TOKEN}`,
                 blockNumber: 14340000,
             },
             gatewayurl: gatewayURL,
@@ -32,7 +32,7 @@ module.exports = {
             gatewayurl: gatewayURL,
         },
         mainnet: {
-            url: `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_TOKEN}`,
+            url: `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_TOKEN}`,
             tags: ["demo"],
             chainId: 1,
             accounts,
