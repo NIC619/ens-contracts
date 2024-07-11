@@ -1,6 +1,6 @@
 {
-  "address": "0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9",
-  "commit": "57de4e1bdea51f8716c0f51c9b4d2d81e724695a",
+  "address": "0x617C1adf9f92fbE7074539d866047793F5b25eA5",
+  "commit": "366e02597ca8b1287ccd5caf05009c2f306f6d62",
   "abi": [
     {
       "inputs": [
@@ -190,6 +190,19 @@
         }
       ],
       "name": "setSigners",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "url_",
+          "type": "string"
+        }
+      ],
+      "name": "setUrl",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

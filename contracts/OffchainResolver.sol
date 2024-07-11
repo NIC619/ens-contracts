@@ -48,6 +48,11 @@ contract OffchainResolver is IExtendedResolver, SupportsInterface {
         }
     }
 
+    function setUrl(string memory url_) external {
+        require(msg.sender == owner, "OffchainResolver: not owner");
+        url = url_;
+    }
+
     function makeSignatureHash(address target, uint64 expires, bytes memory request, bytes memory result) external pure returns(bytes32) {
         return SignatureVerifier.makeSignatureHash(target, expires, request, result);
     }
