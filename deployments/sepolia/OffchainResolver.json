@@ -1,6 +1,6 @@
 {
-  "address": "0x8f620Ed5Bfc61792e4757F48B686fB3678977Ce7",
-  "commit": "3d59230c569252f4976f0128aa6017baa628a807",
+  "address": "0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9",
+  "commit": "57de4e1bdea51f8716c0f51c9b4d2d81e724695a",
   "abi": [
     {
       "inputs": [
@@ -11,7 +11,7 @@
         },
         {
           "internalType": "address[]",
-          "name": "_signers",
+          "name": "signers_",
           "type": "address[]"
         }
       ],
@@ -54,12 +54,18 @@
       "inputs": [
         {
           "indexed": false,
-          "internalType": "address[]",
-          "name": "signers",
-          "type": "address[]"
+          "internalType": "address",
+          "name": "signer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "enabled",
+          "type": "bool"
         }
       ],
-      "name": "NewSigners",
+      "name": "SignerSet",
       "type": "event"
     },
     {
@@ -94,6 +100,19 @@
         }
       ],
       "stateMutability": "pure",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -142,6 +161,37 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner_",
+          "type": "address"
+        }
+      ],
+      "name": "setOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address[]",
+          "name": "signers_",
+          "type": "address[]"
+        },
+        {
+          "internalType": "bool[]",
+          "name": "enableds",
+          "type": "bool[]"
+        }
+      ],
+      "name": "setSigners",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
