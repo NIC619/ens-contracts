@@ -14,18 +14,38 @@ interface IResolverService {
  * Callers must implement EIP 3668 and ENSIP 10.
  */
 contract OffchainResolver is IExtendedResolver, SupportsInterface {
+    address public owner;
     string public url;
     mapping(address=>bool) public signers;
 
-    event NewSigners(address[] signers);
+    event SignerSet(address signer, bool enabled);
     error OffchainLookup(address sender, string[] urls, bytes callData, bytes4 callbackFunction, bytes extraData);
 
-    constructor(string memory _url, address[] memory _signers) {
+    constructor(string memory _url, address[] memory signers_) {
+        owner = msg.sender;
         url = _url;
-        for(uint i = 0; i < _signers.length; i++) {
-            signers[_signers[i]] = true;
+        for(uint i = 0; i < signers_.length; i++) {
+            address signer = signers_[i];
+            require(signer != address(0), "OffchainResolver: zero address");
+            signers[signer] = true;
+            emit SignerSet(signer, true);
         }
-        emit NewSigners(_signers);
+    }
+
+    function setOwner(address owner_) external {
+        require(msg.sender == owner, "OffchainResolver: not owner");
+        require(owner_ != address(0), "OffchainResolver: zero address");
+        owner = owner_;
+    }
+
+    function setSigners(address[] memory signers_, bool[] calldata enableds) external {
+        require(msg.sender == owner, "OffchainResolver: not owner");
+        for(uint i = 0; i < signers_.length; i++) {
+            address signer = signers_[i];
+            require(signer != address(0), "OffchainResolver: zero address");
+            signers[signer] = enableds[i];
+            emit SignerSet(signer, enableds[i]);
+        }
     }
 
     function makeSignatureHash(address target, uint64 expires, bytes memory request, bytes memory result) external pure returns(bytes32) {
