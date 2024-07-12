@@ -1,6 +1,6 @@
 # ENS Offchain Resolver Contracts
 
-This package contains Solidity contracts you can customise and deploy to provide offchain resolution of ENS names.
+This repo contains Solidity contracts you can customise and deploy to provide offchain resolution of ENS names.
 
 These contracts implement [ENSIP 10](https://docs.ens.domains/ens-improvement-proposals/ensip-10-wildcard-resolution) (wildcard resolution support) and [EIP 3668](https://eips.ethereum.org/EIPS/eip-3668) (CCIP Read). Together this means that the resolver contract can be very straightforward; it simply needs to respond to all resolution requests with a redirect to your gateway, and verify gateway responses by checking the signature on the returned message.
 
@@ -20,28 +20,43 @@ This library facilitates checking signatures over CCIP read responses.
 
 This contract implements the offchain resolution system. Set this contract as the resolver for a name, and that name and all its subdomains that are not present in the ENS registry will be resolved via the provided gateway by supported clients.
 
-### Quick start
+### Deployment Info
 
-Please export the environment variables first if you haven't: go back to root directory and run `yarn export-env`
+#### ENSRegistry on Sepolia
+
+-   Address: [0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6](https://sepolia.etherscan.io/address/0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6)
+-   This registry has `eth` and `token.eth` domain name registered by owner `0xE3c19B6865f2602f30537309e7f8D011eF99C1E0` and has `OffchainResolver` contract address `0x617C1adf9f92fbE7074539d866047793F5b25eA5` set as resolver for `token.eth` domain.
+
+#### OffchainResolver on Sepolia
+
+-   Address: [0x617C1adf9f92fbE7074539d866047793F5b25eA5](https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5)
+-   This contract is set as resolver for `token.eth` domain in `ENSRegistry` contract.
+-   Owner and signer are both `0xE3c19B6865f2602f30537309e7f8D011eF99C1E0`.
+
+### If you want to deploy your own ENSRegistry or OffchainResolver contracts
+
+Provide `DEPLOYER_PRIVATE_KEY`, `ALCHEMY_TOKEN` and `ETHERSCAN_API_KEY` in `.env` file.
 
 #### Setup environment
 
-If you haven't run `yarn install` in root directory:
+Run the following command:
 
 ```bash
-yarn install && yarn build
+yarn install
+yarn build
 ```
 
-#### Deploy ENSRegistry contract to Sepolia Testnet
+#### Deploy ENSRegistry contract on Sepolia
 
-If you want to deploy a new ENSRegistry contract:
+If you want to deploy a new ENSRegistry contract, you need to provide addional info in `.env` file:
+
+-   `ENS_REGISTRY_OWNER_PRIVATE_KEY` - Owner of the ENSRegistry contract.
+
+Next, run the following command:
 
 ```bash
-cd ./packages/contracts
 npx hardhat run ./scripts/deploy/ENSRegistry.ts --network sepolia
 ```
-
-**Requirement**: Provide **ENSRegistry** owner's private key in `.env` file first: `ENS_REGISTRY_OWNER_PRIVATE_KEY=`
 
 -   Example output:
 
@@ -62,51 +77,49 @@ Successfully verified contract ENSRegistry on Etherscan.
 https://sepolia.etherscan.io/address/0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6#code
 ```
 
-#### Deploy OffchainResolver contract to Sepolia Testnet
+#### Deploy OffchainResolver contract on Sepolia
 
-If you want to deploy a new OffchainResolver contract:
+If you want to deploy a new OffchainResolver contract, you need to set the `Signer` address in [deployments/sepolia/AddressRecord.json](deployments/sepolia/AddressRecord.json) file. The signer will be the signer registered in the resolver contract.
+
+Additionally, you can provide `GATEWAY_SERVER_URL` info in `.env` file which is the url to your gateway server for CCIP Read. If not provided, a default gateway url `http://localhost:8080` will be used.
 
 ```bash
 npx hardhat run ./scripts/deploy/OffchainResolver.ts --network sepolia
 ```
 
-**Requirement**: Provide **deployer**'s private key in `.env` file first: `DEPLOYER_PRIVATE_KEY=`.
-**Requirement**: Update `gatewayurl` param in `hardhat.config.ts` if you have your own gateway served somewhere else. Otherwise default `gatewayurl` will be used.
-
 -   Example output:
 
 ```
 Deploying OffchainResolver contract...
-✔ Expected new contract address : 0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9, is this correct? … yes
-OffchainResolver contract address: 0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9
+✔ Expected new contract address : 0x617C1adf9f92fbE7074539d866047793F5b25eA5, is this correct? … yes
+OffchainResolver contract address: 0x617C1adf9f92fbE7074539d866047793F5b25eA5
 
 ✔ Verify contract on etherscan
-cmd : npx hardhat verify --network sepolia --contract contracts/OffchainResolver.sol:OffchainResolver 0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9 --constructor-args ./scripts/deploy/OffchainResolverVerifyArguments.ts ? … yes
+cmd : npx hardhat verify --network sepolia --contract contracts/OffchainResolver.sol:OffchainResolver 0x617C1adf9f92fbE7074539d866047793F5b25eA5 --constructor-args ./scripts/deploy/OffchainResolverVerifyArguments.ts ? … yes
 Nothing to compile
 
 Successfully submitted source code for contract
-contracts/OffchainResolver.sol:OffchainResolver at 0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9
+contracts/OffchainResolver.sol:OffchainResolver at 0x617C1adf9f92fbE7074539d866047793F5b25eA5
 for verification on the block explorer. Waiting for verification result...
 
 Successfully verified contract OffchainResolver on Etherscan.
-https://sepolia.etherscan.io/address/0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9#code
+https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5#code
 ```
 
-#### Set ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
+#### Set `eth` and `token.eth` domains and corresponding OffchainResolver contract for `token.eth` domain
+
+Setting domains and resolver requires `ENS_REGISTRY_OWNER_PRIVATE_KEY=` and `ENS_DOMAIN_OWNER_PRIVATE_KEY=` provided in `.env` file.
 
 ```bash
 npx hardhat run ./scripts/operating/OffchainResolver/SetResolver.ts --network sepolia
 ```
-
-**Requirement**: Provide **ENSRegistry** owner's private key in `.env` file first: `ENS_REGISTRY_OWNER_PRIVATE_KEY=`
-**Requirement**: Provide **domain owner**'s private key in `.env` file first: `ENS_DOMAIN_OWNER_PRIVATE_KEY=`
 
 -   Example output:
 
 ```
 ENSRegistry contract on etherscan: https://sepolia.etherscan.io/address/0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6
 
-OffchainResolver contract on etherscan: https://sepolia.etherscan.io/address/0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9
+OffchainResolver contract on etherscan: https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5
 
 Set ethdomain "eth" owner, TX: https://sepolia.etherscan.io/tx/0x3f093c0bd1c6b616c46c72032025af64080dcd193c85e615446e84d9eacee52d
 
@@ -115,7 +128,7 @@ Set maindomain "token" owner, TX: https://sepolia.etherscan.io/tx/0x980097bcd976
 Set fulldomain "token.eth" resolver contract, TX: https://sepolia.etherscan.io/tx/0xc112ad0ed9497c8f6ee1cf7c966534f16e717d351285cce218f624b97fc5d352
 ```
 
-#### Get ENSRegistry contract `token.eth` maindomain, and corresponding OffchainResolver contract address
+#### Query the resolver of the `token.eth` domain
 
 ```bash
 % npx hardhat run ./scripts/operating/OffchainResolver/GetResolver.ts --network sepolia
@@ -130,5 +143,5 @@ Get ethdomain "eth" owner: 0xE3c19B6865f2602f30537309e7f8D011eF99C1E0
 
 Get maindomain "token" owner: 0xE3c19B6865f2602f30537309e7f8D011eF99C1E0
 
-Get fulldomain "token.eth" resolver contract: 0xA4C7bfBAe5b4Ac783f04030657ECF5ac378E85a9
+Get fulldomain "token.eth" resolver contract: 0x617C1adf9f92fbE7074539d866047793F5b25eA5
 ```
