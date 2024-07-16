@@ -30,7 +30,8 @@ async function main() {
     }
 
     const labelTLD = "eth" // Label of top level domain (TLD)
-    const labelSLD = "token" // Label of second level domain (SLD)
+    const labelSLD = await utils.getSLDLabel() // Label of second level domain (SLD)
+    await utils.confirmSetOwnerAndResolverForSLDLabel(labelSLD)
     const domainName = `${labelSLD}.${labelTLD}`
 
     let tx: providers.TransactionResponse

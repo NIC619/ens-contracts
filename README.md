@@ -106,26 +106,39 @@ Successfully verified contract OffchainResolver on Etherscan.
 https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5#code
 ```
 
-#### Set `eth` and `token.eth` domains and corresponding OffchainResolver contract for `token.eth` domain
+#### Set owner for Top Level Domain `eth`
 
-Setting domains and resolver requires `ENS_REGISTRY_OWNER_PRIVATE_KEY=` and `ENS_DOMAIN_OWNER_PRIVATE_KEY=` provided in `.env` file.
+Setting domain owner requires `ENS_REGISTRY_OWNER_PRIVATE_KEY=` and `ENS_DOMAIN_OWNER_PRIVATE_KEY=` provided in `.env` file.
 
 ```bash
-npx hardhat run ./scripts/operating/OffchainResolver/SetResolver.ts --network sepolia
+npx hardhat run ./scripts/operating/OffchainResolver/SetTLDOwner.ts --network sepolia
 ```
 
 -   Example output:
 
 ```
 ENSRegistry contract on etherscan: https://sepolia.etherscan.io/address/0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6
-
 OffchainResolver contract on etherscan: https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5
-
 Set ethdomain "eth" owner, TX: https://sepolia.etherscan.io/tx/0x3f093c0bd1c6b616c46c72032025af64080dcd193c85e615446e84d9eacee52d
+```
 
-Set maindomain "token" owner, TX: https://sepolia.etherscan.io/tx/0x980097bcd976d39ea30cc928e8753d4d74a349f7db5a04c16711096f02b94e9a
+#### Set owner and resolver for Second Level Domain like `token.eth`
 
-Set fulldomain "token.eth" resolver contract, TX: https://sepolia.etherscan.io/tx/0xc112ad0ed9497c8f6ee1cf7c966534f16e717d351285cce218f624b97fc5d352
+Setting domain owner and resolver requires `ENS_REGISTRY_OWNER_PRIVATE_KEY=` and `ENS_DOMAIN_OWNER_PRIVATE_KEY=` provided in `.env` file.
+
+```bash
+npx hardhat run ./scripts/operating/OffchainResolver/SetSLDOwnerAndResolver.ts --network sepolia
+```
+
+-   Example output:
+
+```
+ENSRegistry contract on etherscan: https://sepolia.etherscan.io/address/0xCDfb8dFa83152340e06f5CCcc39F214A621F44a6
+OffchainResolver contract on etherscan: https://sepolia.etherscan.io/address/0x617C1adf9f92fbE7074539d866047793F5b25eA5
+Enter the second level domain label (SLD), e.g., "token" in "token.eth" … test
+✔ You want to set owner and resolver for domain name "test.eth", is this correct? … yes
+Set SLD "test" owner, TX: https://sepolia.etherscan.io/tx/0xff0d9520bdecde1ce3689dc5b6f2c9ec76ff42c2126379a37f9dd5829fa3a3d1
+Set domain "test.eth" resolver contract, TX: https://sepolia.etherscan.io/tx/0x45ab9f9d5284ae6b4d6b48454df90b298f7db8e44989c9f83d2128168043a186
 ```
 
 #### Query the resolver of the `token.eth` domain

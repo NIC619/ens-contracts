@@ -236,3 +236,47 @@ export async function confirmNextContractAddr(deployer: Signer) {
 
     return
 }
+
+export async function getSLDLabel(): Promise<string> {
+    const promptResult = await prompts(
+        {
+            type: "text",
+            name: "SLDLabel",
+            message: `Enter the second level domain label (SLD), e.g., "token" in "token.eth"`,
+        },
+        {
+            onCancel: async function () {
+                console.log("Exit process")
+                process.exit(0)
+            },
+        },
+    )
+
+    if (!promptResult.SLDLabel) {
+        process.exit(0)
+    }
+
+    return promptResult.SLDLabel
+}
+
+export async function confirmSetOwnerAndResolverForSLDLabel(SLDLabel: string) {
+    const promptResult = await prompts(
+        {
+            type: "confirm",
+            name: "correct",
+            message: `You want to set owner and resolver for domain name "${SLDLabel}.eth", is this correct?`,
+        },
+        {
+            onCancel: async function () {
+                console.log("Exit process")
+                process.exit(0)
+            },
+        },
+    )
+
+    if (!promptResult.correct) {
+        process.exit(0)
+    }
+
+    return
+}
